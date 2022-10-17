@@ -14,7 +14,7 @@ struct Args {
     proxy_id: String,
 
     /// Directory for private key storage
-    #[clap(long, env, value_parser, default_value="/etc/bridgehead/secrets")]
+    #[clap(long, env, value_parser, default_value="/data/")]
     output_path: PathBuf,
 
 
