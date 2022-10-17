@@ -34,23 +34,18 @@ fn main() {
     let id = beam_id::ProxyId::new(&args.proxy_id).unwrap();
     println!("Welcome to the Samply.Beam enrollment companion app.");
     println!("This application generates");
-    let outpath: OsString= args.output_path.clone().into_os_string();
-    let outpath = outpath.to_string_lossy();
-    println!("\ta) a secret key. This file is automatically saved in the folder {} and must not be shared," , outpath);
+    println!("\ta) a secret key. This file is automatically saved and must not be shared," );
     println!("\tb) a certificate sign request. This is output sent to the administrator of the central broker via email to: {}.", args.admin_email);
     let (priv_key, csr) = generate_priv_key_and_csr(&id).unwrap();
     write_priv_key(priv_key, id, &args.output_path, args.overwrite).unwrap();
-    println!("File written.");
     println!("Please send the following text block to {}:", args.admin_email);
     println!("{}", String::from_utf8(csr).unwrap());
 
 }
 
 fn generate_priv_key_and_csr(proxy_id: &beam_id::ProxyId) -> anyhow::Result<(Vec<u8>, Vec<u8>)> {
-    println!("Generating new private key");
     let rsa = PKey::from_rsa(openssl::rsa::Rsa::generate(2048)?)?;
     let private_key = &rsa.private_key_to_pem_pkcs8()?;
-    println!("Generating Certificate Sign Request");
     let mut name_builder = openssl::x509::X509Name::builder()?;
     name_builder.append_entry_by_nid(Nid::COMMONNAME, proxy_id.value())?;
     name_builder.append_entry_by_nid(Nid::COUNTRYNAME, "DE")?;
@@ -70,10 +65,6 @@ fn generate_priv_key_and_csr(proxy_id: &beam_id::ProxyId) -> anyhow::Result<(Vec
         eprintln!("File {} already exists. For overwriting set --overwrite flag.", filename.into_os_string().to_string_lossy());
         std::process::exit(2);
     }
-    println!("filename is: {:?}",filename_string);
-    std::fs::write(filename.clone(), priv_key)?;
-    if !filename.exists() {
-        eprintln!("File not exsisting after write instruction");
-    }
+    std::fs::write(filename, priv_key)?;
     Ok(())
  }
