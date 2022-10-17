@@ -13,10 +13,9 @@ struct Args {
     #[clap(long, env, value_parser)]
     proxy_id: String,
 
-    /// Directory for private key storage
-    #[clap(long, env, value_parser, default_value="/data/")]
-    output_path: PathBuf,
-
+    /// File to store private key (.pem format)
+    #[clap(long, env, value_parser, default_value="/pki/myprivatekey.pem")]
+    output_file: PathBuf,
 
     #[clap(long, env, value_parser, default_value="admin@samply.beam.dkfz.de")]
     admin_email: String,
@@ -37,7 +36,7 @@ fn main() {
     println!("\ta) a secret key. This file is automatically saved and must not be shared," );
     println!("\tb) a certificate sign request. This is output sent to the administrator of the central broker via email to: {}.", args.admin_email);
     let (priv_key, csr) = generate_priv_key_and_csr(&id).unwrap();
-    write_priv_key(priv_key, id, &args.output_path, args.overwrite).unwrap();
+    write_priv_key(priv_key, id, &args.output_file, args.overwrite).unwrap();
     println!("Please send the following text block to {}:", args.admin_email);
     println!("{}", String::from_utf8(csr).unwrap());
 
@@ -57,13 +56,12 @@ fn generate_priv_key_and_csr(proxy_id: &beam_id::ProxyId) -> anyhow::Result<(Vec
 
     Ok((private_key.clone(),csr))
 }
- fn write_priv_key(priv_key: Vec<u8>, proxy_id: ProxyId, path: &Path, overwrite: bool) -> anyhow::Result<()>{
+ fn write_priv_key(priv_key: Vec<u8>, proxy_id: ProxyId, filename: &Path, overwrite: bool) -> anyhow::Result<()>{
     let proxy = proxy_id.value().split('.').map(|v| String::from(v)).collect::<Vec<String>>();
-    let filename = path.clone().with_file_name(&proxy[0]).with_extension("priv.pem");
     if filename.exists() && !overwrite{
-        eprintln!("File {} already exists. For overwriting set --overwrite flag.", filename.into_os_string().to_string_lossy());
+        eprintln!("File {} already exists. For overwriting set --overwrite flag.", filename.to_string_lossy());
         std::process::exit(2);
     }
-    std::fs::write(filename.into_os_string(), priv_key)?;
+    std::fs::write(filename, priv_key)?;
     Ok(())
  }
