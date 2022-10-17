@@ -71,6 +71,9 @@ fn generate_priv_key_and_csr(proxy_id: &beam_id::ProxyId) -> anyhow::Result<(Vec
         std::process::exit(2);
     }
     println!("filename is: {:?}",filename_string);
-    std::fs::write(filename, priv_key)?;
+    std::fs::write(filename.clone(), priv_key)?;
+    if !filename.exists() {
+        eprintln!("File not exsisting after write instruction");
+    }
     Ok(())
  }
