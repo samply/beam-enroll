@@ -45,6 +45,7 @@ pub trait BeamId: Display + Sized + PartialEq + Eq + Hash {
         Self::str_has_type(self.value()).unwrap()
     }
     fn value(&self) -> &String;
+    //FIXME Fix check
     fn new(id: &str) -> Result<Self,SamplyBeamError>;
     fn can_be_signed_by<B: BeamId>(&self, other_id: &B) -> bool {
         return self.value().ends_with(other_id.value());
@@ -87,9 +88,9 @@ impl BeamId for AppId {
 
     fn new(id: &str) -> Result<Self,SamplyBeamError> {
         let given_type = Self::str_has_type(id)?;
-        if given_type != BeamIdType::AppId {
-            return Err(SamplyBeamError::InvalidBeamId(format!("{id} is a {given_type}, not an AppId.")));
-        }
+        //if given_type != BeamIdType::AppId {
+        //    return Err(SamplyBeamError::InvalidBeamId(format!("{id} is a {given_type}, not an AppId.")));
+        //}
         Ok(Self(id.to_string()))
     }
 }
@@ -103,9 +104,9 @@ impl BeamId for ProxyId {
 
     fn new(id: &str) -> Result<Self,SamplyBeamError> {
         let given_type = Self::str_has_type(id)?;
-        if given_type != BeamIdType::ProxyId {
-            return Err(SamplyBeamError::InvalidBeamId(format!("{id} is a {given_type}, not a ProxyId.")));
-        }
+        //if given_type != BeamIdType::ProxyId {
+        //    return Err(SamplyBeamError::InvalidBeamId(format!("{id} is a {given_type}, not a ProxyId.")));
+        //}
         Ok(Self(id.to_string()))
     }
 }
@@ -119,9 +120,9 @@ impl BeamId for BrokerId {
 
     fn new(id: &str) -> Result<Self,SamplyBeamError> {
         let given_type = Self::str_has_type(id)?;
-        if given_type != BeamIdType::BrokerId {
-            return Err(SamplyBeamError::InvalidBeamId(format!("{id} is a {given_type}, not a BrokerId.")));
-        }
+        //if given_type != BeamIdType::BrokerId {
+        //    return Err(SamplyBeamError::InvalidBeamId(format!("{id} is a {given_type}, not a BrokerId.")));
+        //}
         Ok(Self(id.to_string()))
     }
 }
