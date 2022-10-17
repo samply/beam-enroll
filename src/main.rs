@@ -64,8 +64,8 @@ fn generate_priv_key_and_csr(proxy_id: &beam_id::ProxyId) -> anyhow::Result<(Vec
 }
  fn write_priv_key(priv_key: Vec<u8>, proxy_id: ProxyId, path: &Path, overwrite: bool) -> anyhow::Result<()>{
     let proxy = proxy_id.value().split('.').map(|v| String::from(v)).collect::<Vec<String>>();
-    let filename_string = proxy[0].to_owned() + "_secretkey";
-    let filename = path.clone().with_file_name(&filename_string).with_extension("csr");
+    let filename_string = proxy[0].to_owned() + ".priv";
+    let filename = path.clone().with_file_name(&filename_string).with_extension("pem");
     if filename.exists() && !overwrite{
         eprintln!("File {} already exists. For overwriting set --overwrite flag.", filename.into_os_string().to_string_lossy());
         std::process::exit(2);
