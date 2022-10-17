@@ -22,6 +22,7 @@ pub trait BeamId: Display + Sized + PartialEq + Eq + Hash {
     fn str_has_type(value: &str) -> Result<BeamIdType,SamplyBeamError> {
         let mut split = value.split('.').rev();
         // Broker
+        /*
         let part = split.next();
         if part.is_none() {
             return Err(SamplyBeamError::InvalidBeamId(format!("Beam ID must end with a valid domain")));
@@ -39,6 +40,7 @@ pub trait BeamId: Display + Sized + PartialEq + Eq + Hash {
         if let Some(s) = split.next() {
             return Err(SamplyBeamError::InvalidBeamId(format!("Beam ID must not continue left of AppID part: {s}")));
         }
+        */
         Ok(BeamIdType::AppId)
     }
     fn has_type(&self) -> BeamIdType { // This is for &self, so we can assume the existing ID is correct
