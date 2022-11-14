@@ -1,12 +1,12 @@
-use std::{path::{PathBuf, Path}, ffi::OsString};
+use std::path::{Path, PathBuf};
 
-use openssl::{pkey::PKey, nid::Nid};
 use clap::Parser;
+use openssl::{nid::Nid, pkey::PKey};
 mod beam_id;
 mod errors;
 use beam_id::*;
 /// Settings for Samply.Beam (Shared)
-#[derive(Parser,Debug)]
+#[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Args {
     /// ProxyId of the option to enroll
@@ -14,15 +14,14 @@ struct Args {
     proxy_id: String,
 
     /// File to store private key (.pem format)
-    #[clap(long, env, value_parser, default_value="/pki/myprivatekey.pem")]
+    #[clap(long, env, value_parser, default_value = "./pki/myprivatekey.pem")]
     output_file: PathBuf,
 
-    #[clap(long, env, value_parser, default_value="admin@samply.beam.dkfz.de")]
-    admin_email: String,
+    #[clap(long, env, value_parser)]
+    admin_email: Option<String>,
 
-    #[clap(long, env, value_parser, default_value="false")]
+    #[clap(long, env, value_parser, default_value = "false")]
     overwrite: bool,
-
     // Broker Domain
     //#[clap(long, env, value_parser)]
     //broker_url: String,
@@ -33,13 +32,18 @@ fn main() {
     let id = beam_id::ProxyId::new(&args.proxy_id).unwrap();
     println!("Welcome to the Samply.Beam enrollment companion app.");
     println!("This application generates");
-    println!("\ta) a secret key. This file is automatically saved and must not be shared," );
-    println!("\tb) a certificate sign request. This is output sent to the administrator of the central broker via email to: {}.", args.admin_email);
+    println!("\ta) a secret key. This file is automatically saved and must not be shared,");
+    println!("\tb) a certificate sign request. This is output sent to the administrator of the central broker via email{}.", match args.admin_email{Some(ref addr)=> " to: ".to_owned()+&addr, None => "".to_string()});
     let (priv_key, csr) = generate_priv_key_and_csr(&id).unwrap();
     write_priv_key(priv_key, id, &args.output_file, args.overwrite).unwrap();
-    println!("Please send the following text block to {}:", args.admin_email);
+    println!(
+        "Please send the following text block to {}:",
+        match args.admin_email {
+            Some(ref addr) => &addr,
+            None => "the central administrator",
+        }
+    );
     println!("{}", String::from_utf8(csr).unwrap());
-
 }
 
 fn generate_priv_key_and_csr(proxy_id: &beam_id::ProxyId) -> anyhow::Result<(Vec<u8>, Vec<u8>)> {
@@ -54,14 +58,26 @@ fn generate_priv_key_and_csr(proxy_id: &beam_id::ProxyId) -> anyhow::Result<(Vec
     csr_builder.sign(rsa.as_ref(), openssl::hash::MessageDigest::sha256())?;
     let csr = csr_builder.build().to_pem()?;
 
-    Ok((private_key.clone(),csr))
+    Ok((private_key.clone(), csr))
 }
- fn write_priv_key(priv_key: Vec<u8>, proxy_id: ProxyId, filename: &Path, overwrite: bool) -> anyhow::Result<()>{
-    let proxy = proxy_id.value().split('.').map(|v| String::from(v)).collect::<Vec<String>>();
-    if filename.exists() && !overwrite{
-        eprintln!("File {} already exists. For overwriting set --overwrite flag.", filename.to_string_lossy());
+fn write_priv_key(
+    priv_key: Vec<u8>,
+    proxy_id: ProxyId,
+    filename: &Path,
+    overwrite: bool,
+) -> anyhow::Result<()> {
+    let proxy = proxy_id
+        .value()
+        .split('.')
+        .map(|v| String::from(v))
+        .collect::<Vec<String>>();
+    if filename.exists() && !overwrite {
+        eprintln!(
+            "File {} already exists. For overwriting set --overwrite flag.",
+            filename.to_string_lossy()
+        );
         std::process::exit(2);
     }
     std::fs::write(filename, priv_key)?;
     Ok(())
- }
+}
