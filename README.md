@@ -7,7 +7,7 @@ To provide authentication, end-to-end encryption, and ensure data integrity, Sam
 
 ## Usage
 
-There are two ways to run the companion tool: First using Docker or Second compiling and running it locally. In both cases you need to provide the intended ProxyID (see [Beam Documentation]() for details). Therefore, the following commands expect the ProxyId in the environment varable `$PROXY_ID` and an output keyfile name in `$PRIVATEKEXFILENAME`. Per default, the beam proxy expects `$PROXY_ID_SHOR.priv.pem`.
+There are two ways to run the companion tool: First using Docker or second compiling and running it locally. In both cases you need to provide the intended ProxyID (see [Beam Documentation](https://github.com/samply/beam) for details). Therefore, the following commands expect the ProxyId in the environment varable `$PROXY_ID` and an output keyfile name in `$PRIVATEKEXFILENAME`. Per default, the beam proxy expects `$PROXY_ID_SHOR.priv.pem`.
 
 ### Docker
 
