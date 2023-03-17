@@ -1,8 +1,8 @@
 ![Logo](./doc/Logo.svg) <!-- TODO: New Logo -->
 
-The tool in this repository is a helper tool for enrolling new endpoints in a Samply.Beam network.
+The tool in this repository is a helper tool for enrolling new endpoints in a [Samply.Beam](https://github.com/samply/beam) network.
 
-Samply.Beam is a distributed task broker designed for efficient communication across strict network environments. It provides most commonly used communication patterns across strict network boundaries, end-to-end encryption and signatures, as well as certificate management and validation on top of an easy to use REST API.
+[Samply.Beam](https://github.com/samply/beam) is a distributed task broker designed for efficient communication across strict network environments. It provides most commonly used communication patterns across strict network boundaries, end-to-end encryption and signatures, as well as certificate management and validation on top of an easy to use REST API.
 To provide authentication, end-to-end encryption, and ensure data integrity, Samply.Beam requires so called "public key cryptography". As it is implemented in Samply.Beam, this requires each site to have a secret "private key" and a publicly known "public certificate". This companion tool generates the private key and generates a "Certificate Sign Request" (CSR), a predecessor to the public certificate. This CSR can be used by the central CA operator to generate and sign the certificate.
 
 ## Usage
