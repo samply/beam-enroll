@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0.58"
 clap = { version = "3.2.8", features = ["env", "derive"] }
-openssl = "0.10.41"
+openssl = "0.10.48"
 
 [build-dependencies]
 build-data = "0"
