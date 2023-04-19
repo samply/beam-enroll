@@ -1,0 +1,10 @@
+# This assumes binaries are present, see COPY directive.
+
+FROM alpine AS chmodder
+ARG TARGETARCH
+COPY /artifacts/binaries-$TARGETARCH/beam_enroll /app/
+RUN chmod +x /app/*
+
+FROM gcr.io/distroless/cc
+COPY --from=chmodder /app/* /usr/local/bin/
+ENTRYPOINT [ "/usr/local/bin/beam_enroll" ]
