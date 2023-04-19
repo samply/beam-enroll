@@ -2,8 +2,8 @@
 name = "beam_enroll"
 version = "0.1.0"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+license = "Apache-2.0"
+documentation = "https://github.com/samply/beam-enroll"
 
 [dependencies]
 anyhow = "1.0.58"
