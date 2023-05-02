@@ -20,7 +20,7 @@ impl Display for BeamIdType {
 }
 pub trait BeamId: Display + Sized + PartialEq + Eq + Hash {
     fn str_has_type(value: &str) -> Result<BeamIdType,SamplyBeamError> {
-        let mut split = value.split('.').rev();
+        let _split = value.split('.').rev();
         // Broker
         /*
         let part = split.next();
@@ -89,7 +89,7 @@ impl BeamId for AppId {
     }
 
     fn new(id: &str) -> Result<Self,SamplyBeamError> {
-        let given_type = Self::str_has_type(id)?;
+        let _given_type = Self::str_has_type(id)?;
         //if given_type != BeamIdType::AppId {
         //    return Err(SamplyBeamError::InvalidBeamId(format!("{id} is a {given_type}, not an AppId.")));
         //}
@@ -105,7 +105,7 @@ impl BeamId for ProxyId {
     }
 
     fn new(id: &str) -> Result<Self,SamplyBeamError> {
-        let given_type = Self::str_has_type(id)?;
+        let _given_type = Self::str_has_type(id)?;
         //if given_type != BeamIdType::ProxyId {
         //    return Err(SamplyBeamError::InvalidBeamId(format!("{id} is a {given_type}, not a ProxyId.")));
         //}
@@ -121,7 +121,7 @@ impl BeamId for BrokerId {
     }
 
     fn new(id: &str) -> Result<Self,SamplyBeamError> {
-        let given_type = Self::str_has_type(id)?;
+        let _given_type = Self::str_has_type(id)?;
         //if given_type != BeamIdType::BrokerId {
         //    return Err(SamplyBeamError::InvalidBeamId(format!("{id} is a {given_type}, not a BrokerId.")));
         //}
