@@ -36,7 +36,7 @@ fn main() -> anyhow::Result<()> {
     println!("Welcome to the Samply.Beam enrollment companion app.");
     println!("This application generates");
     println!("\ta) a secret key. This file is automatically saved and must not be shared,");
-    println!("\tb) a certificate sign request. This is output sent to the administrator of the central broker via email{}.", match args.admin_email{Some(ref addr)=> " to: ".to_owned() + addr, None => "".to_string()});
+    println!("\tb) a certificate sign request. This output is sent to the administrator of the central broker via email{}.", match args.admin_email{Some(ref addr)=> " to: ".to_owned() + addr, None => "".to_string()});
 
     let (priv_key, mut csr) = generate_priv_key_and_csr(&id)?;
 
