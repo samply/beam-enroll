@@ -51,14 +51,14 @@ fn main() -> anyhow::Result<()> {
         write_priv_key(priv_key, &args.output_file)?;
         csr
     };
+    let admin = match args.admin_email {
+        Some(ref addr) => addr,
+        None => "the central administrator",
+    };
     println!(
-        "Please send the following text block to {}:",
-        match args.admin_email {
-            Some(ref addr) => addr,
-            None => "the central administrator",
-        }
+        "Please send the following text block to {admin}:",
     );
-    println!("{}", String::from_utf8(csr).unwrap());
+    println!("{}", String::from_utf8(csr).unwrap_or(format!("ERROR: Unable to print CSR. This should not happen. Please report this to {admin}.")));
     Ok(())
 }
 
