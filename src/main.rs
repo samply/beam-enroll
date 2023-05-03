@@ -38,19 +38,19 @@ fn main() -> anyhow::Result<()> {
     println!("\ta) a secret key. This file is automatically saved and must not be shared,");
     println!("\tb) a certificate sign request. This output is sent to the administrator of the central broker via email{}.", match args.admin_email{Some(ref addr)=> " to: ".to_owned() + addr, None => String::new()});
 
-    let (priv_key, mut csr) = generate_priv_key_and_csr(&id)?;
-
-    if args.output_file.exists() && !args.overwrite {
+    let csr = if args.output_file.exists() && !args.overwrite {
         eprintln!(
             "Reusing existing private key file {}. To generate a new private key, set the --overwrite flag.",
             args.output_file.to_string_lossy()
         );
         let privkey = std::fs::read_to_string(args.output_file)?;
         let privkey = PKey::from_rsa(openssl::rsa::Rsa::private_key_from_pem(privkey.as_bytes())?)?;
-        csr = generate_csr(&privkey, &id)?;
+        generate_csr(&privkey, &id)?
     } else {
+        let (priv_key, csr) = generate_priv_key_and_csr(&id)?;
         write_priv_key(priv_key, &args.output_file)?;
-    }
+        csr
+    };
     println!(
         "Please send the following text block to {}:",
         match args.admin_email {
