@@ -42,7 +42,7 @@ fn main() -> anyhow::Result<()> {
 
     if args.output_file.exists() && !args.overwrite {
         eprintln!(
-            "File {} already exists. For overwriting set --overwrite flag. Displaying the CSR of the existing private key instead.",
+            "Reusing existing private key file {}. To generate a new private key, set the --overwrite flag.",
             args.output_file.to_string_lossy()
         );
         let privkey = std::fs::read_to_string(args.output_file)?;
