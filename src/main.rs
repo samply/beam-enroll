@@ -56,7 +56,7 @@ fn main() -> anyhow::Result<()> {
         None => "the central administrator",
     };
     println!(
-        "Please send the following text block to {admin}:",
+        "\nPlease send the following text block to {admin}:",
     );
     println!("{}", String::from_utf8(csr).unwrap_or(format!("ERROR: Unable to print CSR. This should not happen. Please report this to {admin}.")));
     Ok(())
