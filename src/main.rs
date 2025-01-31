@@ -39,6 +39,11 @@ fn main() -> anyhow::Result<()> {
     println!("\tb) a certificate sign request. This output is sent to the administrator of the central broker via email{}.", match args.admin_email{Some(ref addr)=> " to: ".to_owned() + addr, None => String::new()});
 
     let csr = if args.output_file.exists() && !args.overwrite {
+        if args.output_file.is_dir() {
+            anyhow::bail!("Private key output file points to a directory!\n\
+                This probably means that it was missing when starting beam with docker leading docker to generate an empty folder.\n\
+                Please remove the folder {:?} if empty.", args.output_file)
+        }
         eprintln!(
             "Reusing existing private key file {}. To generate a new private key, set the --overwrite flag.",
             args.output_file.to_string_lossy()
