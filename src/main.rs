@@ -68,7 +68,7 @@ fn main() -> anyhow::Result<()> {
 }
 
 fn generate_priv_key_and_csr(proxy_id: &ProxyId) -> anyhow::Result<(Vec<u8>, Vec<u8>)> {
-    let rsa = PKey::from_rsa(openssl::rsa::Rsa::generate(2048)?)?;
+    let rsa = PKey::from_rsa(openssl::rsa::Rsa::generate(4096)?)?;
     let private_key = rsa.private_key_to_pem_pkcs8()?;
     let csr = generate_csr(&rsa, proxy_id)?;
     Ok((private_key, csr))
